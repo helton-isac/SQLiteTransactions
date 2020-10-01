@@ -14,7 +14,15 @@ public class SQLiteDatabaseHelper {
         return instance;
     }
 
+    public SQLiteDatabaseConnection getConnection() {
+        return conn;
+    }
+
     public void setConnection(SQLiteDatabaseConnection conn) {
         this.conn = conn;
+    }
+
+    public void beginTransactionA() {
+
     }
 }

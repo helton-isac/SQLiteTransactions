@@ -3,8 +3,6 @@ package br.com.hitg.sqlitetransactions.sqlite;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.util.ArrayList;
-
 public class SQLiteDatabaseConnection {
 
     private SQLiteInstanceManager sqlDB;

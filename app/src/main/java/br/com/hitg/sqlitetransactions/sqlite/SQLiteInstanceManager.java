@@ -12,7 +12,6 @@ public class SQLiteInstanceManager extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     // Table Names
     private static final String TABLE_TEST = "test";
-    private static final String KEY_TEST_ID = "id";
     private static final String KEY_TEST_KEY = "column_key";
     private static final String KEY_TEST_VALUE = "value";
     private static SQLiteInstanceManager instance;
@@ -32,7 +31,6 @@ public class SQLiteInstanceManager extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String CREATE_TEST_TABLE = "CREATE TABLE " + TABLE_TEST +
                 "(" +
-                KEY_TEST_ID + " INTEGER, " +
                 KEY_TEST_KEY + " TEXT ," +
                 KEY_TEST_VALUE + " TEXT" +
                 ")";
@@ -44,4 +42,6 @@ public class SQLiteInstanceManager extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
     }
+
+
 }
