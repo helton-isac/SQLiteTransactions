@@ -3,7 +3,8 @@ package br.com.hitg.sqlitetransactions.sqlite;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+
+import br.com.hitg.sqlitetransactions.helper.Helper;
 
 public class SQLiteDatabaseConnection {
 
@@ -23,7 +24,7 @@ public class SQLiteDatabaseConnection {
         try {
             this.database.beginTransactionNonExclusive();
         } catch (Exception e) {
-            Log.d("Test", e.getMessage());
+            Helper.showToastMessage(e.getMessage());
         }
     }
 
@@ -83,7 +84,7 @@ public class SQLiteDatabaseConnection {
             database.execSQL(sql, bindArgs);
             database.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.d("TEST", e.getMessage());
+            Helper.showToastMessage(e.getMessage());
         } finally {
             if (database != null && database.inTransaction()) {
                 database.endTransaction();
