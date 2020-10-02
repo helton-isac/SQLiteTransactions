@@ -11,7 +11,9 @@ public class SQLiteDatabaseHelper {
 
     private static SQLiteDatabaseHelper instance;
 
-    private SQLiteDatabaseConnection conn = null;
+    private SQLiteDatabaseConnection defaultConnection = null;
+    private SQLiteDatabaseConnection transactionA = null;
+    private SQLiteDatabaseConnection transactionB = null;
 
     private static Map<String, SQLiteDatabaseConnection> transactions;
 
@@ -24,11 +26,11 @@ public class SQLiteDatabaseHelper {
     }
 
     public SQLiteDatabaseConnection getDefaultConnection() {
-        return conn;
+        return defaultConnection;
     }
 
     public void setConnection(SQLiteDatabaseConnection conn) {
-        this.conn = conn;
+        this.defaultConnection = conn;
     }
 
     public void beginTransaction(Context context, String transactionName) {

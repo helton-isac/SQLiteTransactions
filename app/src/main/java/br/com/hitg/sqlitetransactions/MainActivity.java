@@ -18,6 +18,9 @@ import br.com.hitg.sqlitetransactions.sqlite.SQLiteDatabaseHelper;
 public class MainActivity extends AppCompatActivity {
 
     SQLiteDatabaseHelper helper;
+    SQLiteDatabaseConnection transactionA;
+    SQLiteDatabaseConnection transactionB;
+
     private TextView tvDefaultTransactionValue;
     private Button btDefaultTranUpdate;
     private Button btRefreshScreen;
@@ -126,6 +129,30 @@ public class MainActivity extends AppCompatActivity {
         String result = DAO.getValueInConnection(helper.getDefaultConnection());
         tvDefaultTransactionValue.setText(result);
         tvStatusValue.setText(getTimeStamp());
+
+        if (transactionA == null) {
+            btTranAStart.setEnabled(true);
+            btTranAUpdate.setEnabled(false);
+            btTranACommit.setEnabled(false);
+            btTranARollback.setEnabled(false);
+        } else {
+            btTranAStart.setEnabled(false);
+            btTranAUpdate.setEnabled(true);
+            btTranACommit.setEnabled(true);
+            btTranARollback.setEnabled(true);
+        }
+
+        if (transactionB == null) {
+            btTranBStart.setEnabled(true);
+            btTranBUpdate.setEnabled(false);
+            btTranBCommit.setEnabled(false);
+            btTranBRollback.setEnabled(false);
+        } else {
+            btTranBStart.setEnabled(false);
+            btTranBUpdate.setEnabled(true);
+            btTranBCommit.setEnabled(true);
+            btTranBRollback.setEnabled(true);
+        }
     }
 
     private String getTimeStamp() {
