@@ -10,10 +10,13 @@ public class SQLiteInstanceManager extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "sqliteDB.db";
     private static final int DATABASE_VERSION = 1;
-    // Table Names
-    private static final String TABLE_TEST = "test";
-    private static final String KEY_TEST_KEY = "column_key";
-    private static final String KEY_TEST_VALUE = "value";
+
+    private static final String TABLE_DEFAULT = "DEFAULT_TABLE";
+    private static final String TABLE_TRANSACTION_A = "TRANSACTION_A_TABLE";
+    private static final String TABLE_TRANSACTION_B = "TRANSACTION_B_TABLE";
+    private static final String COLUMN_CODE = "code";
+    private static final String COLUMN_VALUE = "value";
+
     private static SQLiteInstanceManager instance;
 
     public SQLiteInstanceManager(@Nullable Context context) {
@@ -29,19 +32,31 @@ public class SQLiteInstanceManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String CREATE_TEST_TABLE = "CREATE TABLE " + TABLE_TEST +
+        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_DEFAULT +
                 "(" +
-                KEY_TEST_KEY + " TEXT ," +
-                KEY_TEST_VALUE + " TEXT" +
-                ")";
+                COLUMN_CODE + " TEXT ," +
+                COLUMN_VALUE + " TEXT" +
+                ")"
+        );
 
-        sqLiteDatabase.execSQL(CREATE_TEST_TABLE);
+        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_TRANSACTION_A +
+                "(" +
+                COLUMN_CODE + " TEXT ," +
+                COLUMN_VALUE + " TEXT" +
+                ")"
+        );
+
+        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_TRANSACTION_B +
+                "(" +
+                COLUMN_CODE + " TEXT ," +
+                COLUMN_VALUE + " TEXT" +
+                ")"
+        );
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
     }
-
-
 }

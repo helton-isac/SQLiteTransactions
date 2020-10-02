@@ -1,6 +1,5 @@
 package br.com.hitg.sqlitetransactions;
 
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.text.DateFormat;
 import java.util.Date;
 
+import br.com.hitg.sqlitetransactions.sqlite.DAO;
 import br.com.hitg.sqlitetransactions.sqlite.SQLiteDatabaseConnection;
 import br.com.hitg.sqlitetransactions.sqlite.SQLiteDatabaseHelper;
 
@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private Button btTranBRollback;
     private TextView tvStatusValue;
 
+    private static String TRANSACTION_A = "TRANSACTION_A";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,13 +54,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void resetTestTable() {
-
-        String deleteTestTableStatement = "DELETE FROM test";
-        String insertInitialValueStatement = "INSERT INTO test VALUES ('data','EMPTY')";
-
-        final SQLiteDatabase database = helper.getConnection().getDatabase();
-        database.execSQL(deleteTestTableStatement);
-        database.execSQL(insertInitialValueStatement);
+        DAO.resetTables();
     }
 
     private void initializeControls() {
@@ -68,29 +64,9 @@ public class MainActivity extends AppCompatActivity {
         tvTranBValue = findViewById(R.id.tvTranBValue);
         tvStatusValue = findViewById(R.id.tvStatusValue);
 
-        btDefaultTranUpdate = findViewById(R.id.btDefaultTranUpdate);
-        btDefaultTranUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateValueOnDefaultTransaction();
-            }
-        });
-
-        btRefreshScreen = findViewById(R.id.btRefreshScreen);
-        btRefreshScreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                refreshScreen();
-            }
-        });
-
         btTranAStart = findViewById(R.id.btTranAStart);
-        btTranAStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startTransactionA();
-            }
-        });
+        btDefaultTranUpdate = findViewById(R.id.btDefaultTranUpdate);
+        btRefreshScreen = findViewById(R.id.btRefreshScreen);
 
         btTranAUpdate = findViewById(R.id.btTranAUpdate);
         btTranACommit = findViewById(R.id.btTranACommit);
@@ -100,36 +76,54 @@ public class MainActivity extends AppCompatActivity {
         btTranBStart = findViewById(R.id.btTranBStart);
         btTranBCommit = findViewById(R.id.btTranBCommit);
         btTranBRollback = findViewById(R.id.btTranBRollback);
+
+        btRefreshScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                refreshScreen();
+            }
+        });
+
+        btDefaultTranUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateValueOnDefaultTransaction();
+            }
+        });
+
+        btTranAStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startTransactionA();
+            }
+        });
+
+        btTranAUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateValueOnTransactionA();
+            }
+        });
+
+
     }
 
     private void startTransactionA() {
-        helper.beginTransactionA();
+        helper.beginTransaction(this, TRANSACTION_A);
     }
 
     private void updateValueOnDefaultTransaction() {
+        DAO.updateValueOnTransaction(helper.getDefaultConnection());
+        refreshScreen();
+    }
 
-        String transactionName = "DEFAULT";
-        String value = String.format("%s: %s", transactionName, getTimeStamp());
-        String updateValueStatement = "UPDATE test SET value = ? WHERE column_key = 'data'";
-
-        final SQLiteDatabase database = helper.getConnection().getDatabase();
-        database.execSQL(updateValueStatement, new Object[]{value});
+    private void updateValueOnTransactionA() {
+        DAO.updateValueOnTransaction(helper.getConnectionByTransaction(TRANSACTION_A));
         refreshScreen();
     }
 
     private void refreshScreen() {
-        String selectQuery = "select value from test where column_key = 'data'";
-
-        final SQLiteDatabase database = helper.getConnection().getDatabase();
-        Cursor cursor = database.rawQuery(selectQuery, null);
-
-        String result = "NULL";
-
-        if (cursor.moveToFirst()) {
-            result = cursor.getString(0);
-        }
-        cursor.close();
-
+        String result = DAO.getValueInConnection(helper.getDefaultConnection());
         tvDefaultTransactionValue.setText(result);
         tvStatusValue.setText(getTimeStamp());
     }

@@ -8,20 +8,23 @@ public class SQLiteDatabaseConnection {
     private SQLiteInstanceManager sqlDB;
     private SQLiteDatabase database;
     private boolean isInsideTransaction = false;
+    private String transactionName;
 
     public SQLiteDatabaseConnection(Context context) {
         initializeInstance(context);
+    }
+
+    public SQLiteDatabaseConnection(Context context, String transactionName) {
+        initializeInstance(context);
+        this.transactionName = transactionName;
+        this.isInsideTransaction = true;
+        database.beginTransactionNonExclusive();
     }
 
     private void initializeInstance(Context context) {
         this.sqlDB = SQLiteInstanceManager.getInstance(context);
         this.database = sqlDB.getWritableDatabase();
         this.database.enableWriteAheadLogging();
-    }
-
-    public void beginTransaction() {
-        database.beginTransactionNonExclusive();
-        this.isInsideTransaction = true;
     }
 
     public boolean commitTransaction() {
@@ -61,5 +64,9 @@ public class SQLiteDatabaseConnection {
             }
         }
         return this.database;
+    }
+
+    public String getTransactionName() {
+        return this.transactionName;
     }
 }
