@@ -23,12 +23,12 @@ public class SQLiteInstanceManager extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public static synchronized SQLiteInstanceManager getInstance(Context context) {
-        if (instance == null) {
-            instance = new SQLiteInstanceManager(context.getApplicationContext());
-        }
-        return instance;
-    }
+//    public static synchronized SQLiteInstanceManager getInstance(Context context) {
+//        if (instance == null) {
+//            instance = new SQLiteInstanceManager(context.getApplicationContext());
+//        }
+//        return instance;
+//    }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {

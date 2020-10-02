@@ -22,7 +22,7 @@ public class SQLiteDatabaseConnection {
     }
 
     private void initializeInstance(Context context) {
-        this.sqlDB = SQLiteInstanceManager.getInstance(context);
+        this.sqlDB = new SQLiteInstanceManager(context);
         this.database = sqlDB.getWritableDatabase();
         this.database.enableWriteAheadLogging();
     }
@@ -57,11 +57,9 @@ public class SQLiteDatabaseConnection {
     }
 
     public SQLiteDatabase getDatabase() {
-        synchronized (this.database) {
-            if (this.database == null || !this.database.isOpen()) {
-                this.database = sqlDB.getWritableDatabase();
-                this.database.enableWriteAheadLogging();
-            }
+        if (this.database == null || !this.database.isOpen()) {
+            this.database = sqlDB.getWritableDatabase();
+            this.database.enableWriteAheadLogging();
         }
         return this.database;
     }
