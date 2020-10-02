@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void startTransactionA() {
         helper.beginTransaction(this, TRANSACTION_A);
+        refreshScreen();
     }
 
     private void updateValueOnDefaultTransaction() {
@@ -127,6 +128,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void refreshScreen() {
         String result = DAO.getValueInConnection(helper.getDefaultConnection());
+        tvDefaultTransactionValue.setText(result);
+        tvStatusValue.setText(getTimeStamp());
+
         tvDefaultTransactionValue.setText(result);
         tvStatusValue.setText(getTimeStamp());
 
