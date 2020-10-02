@@ -18,8 +18,6 @@ public class SQLiteDatabaseConnection {
         initializeInstance(context);
         this.transactionName = transactionName;
         this.isInsideTransaction = true;
-        // Test merge conflict
-        // linha da discordia 02
         database.beginTransaction();
     }
 
