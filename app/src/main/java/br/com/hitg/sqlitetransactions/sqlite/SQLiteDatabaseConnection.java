@@ -1,7 +1,9 @@
 package br.com.hitg.sqlitetransactions.sqlite;
 
 import android.content.Context;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class SQLiteDatabaseConnection {
 
@@ -18,13 +20,17 @@ public class SQLiteDatabaseConnection {
         initializeInstance(context);
         this.transactionName = transactionName;
         this.isInsideTransaction = true;
-        this.database.beginTransaction();
+        try {
+            this.database.beginTransactionNonExclusive();
+        } catch (Exception e) {
+            Log.d("Test", e.getMessage());
+        }
     }
 
     private void initializeInstance(Context context) {
         this.sqlDB = new SQLiteInstanceManager(context);
-        this.database = sqlDB.getWritableDatabase();
-        this.database.enableWriteAheadLogging();
+        this.sqlDB.setWriteAheadLoggingEnabled(true);
+        this.database = this.sqlDB.getWritableDatabase();
     }
 
     public boolean commitTransaction() {
@@ -66,5 +72,22 @@ public class SQLiteDatabaseConnection {
 
     public String getTransactionName() {
         return this.transactionName;
+    }
+
+    public void execSQL(String sql, Object[] bindArgs) throws SQLException {
+        try {
+            if (this.isInsideTransaction() && !this.database.inTransaction()) {
+                database.beginTransactionNonExclusive();
+            }
+            database.beginTransactionNonExclusive();
+            database.execSQL(sql, bindArgs);
+            database.setTransactionSuccessful();
+        } catch (Exception e) {
+            Log.d("TEST", e.getMessage());
+        } finally {
+            if (database != null && database.inTransaction()) {
+                database.endTransaction();
+            }
+        }
     }
 }
