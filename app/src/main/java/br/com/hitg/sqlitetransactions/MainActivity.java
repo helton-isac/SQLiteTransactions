@@ -1,6 +1,5 @@
 package br.com.hitg.sqlitetransactions;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,10 +16,9 @@ import br.com.hitg.sqlitetransactions.sqlite.SQLiteDatabaseHelper;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static String TRANSACTION_A = "TRANSACTION_A";
+    private static String TRANSACTION_B = "TRANSACTION_B";
     SQLiteDatabaseHelper helper;
-    SQLiteDatabaseConnection transactionA;
-    SQLiteDatabaseConnection transactionB;
-
     private TextView tvDefaultTransactionValue;
     private Button btDefaultTranUpdate;
     private Button btRefreshScreen;
@@ -35,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private Button btTranBCommit;
     private Button btTranBRollback;
     private TextView tvStatusValue;
-
-    private static String TRANSACTION_A = "TRANSACTION_A";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,12 +130,17 @@ public class MainActivity extends AppCompatActivity {
         tvDefaultTransactionValue.setText(result);
         tvStatusValue.setText(getTimeStamp());
 
+        SQLiteDatabaseConnection transactionA = helper.getConnectionByTransaction(TRANSACTION_A);
+        SQLiteDatabaseConnection transactionB = helper.getConnectionByTransaction(TRANSACTION_B);
+
         if (transactionA == null) {
             btTranAStart.setEnabled(true);
             btTranAUpdate.setEnabled(false);
             btTranACommit.setEnabled(false);
             btTranARollback.setEnabled(false);
         } else {
+            String tvTranAValueResult = DAO.getValueInConnection(transactionA);
+            tvTranAValue.setText(tvTranAValueResult);
             btTranAStart.setEnabled(false);
             btTranAUpdate.setEnabled(true);
             btTranACommit.setEnabled(true);
@@ -152,6 +153,8 @@ public class MainActivity extends AppCompatActivity {
             btTranBCommit.setEnabled(false);
             btTranBRollback.setEnabled(false);
         } else {
+            String tvTranBValueResult = DAO.getValueInConnection(transactionB);
+            tvTranBValue.setText(tvTranBValueResult);
             btTranBStart.setEnabled(false);
             btTranBUpdate.setEnabled(true);
             btTranBCommit.setEnabled(true);

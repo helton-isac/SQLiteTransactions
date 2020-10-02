@@ -10,12 +10,8 @@ import java.util.Map;
 public class SQLiteDatabaseHelper {
 
     private static SQLiteDatabaseHelper instance;
-
-    private SQLiteDatabaseConnection defaultConnection = null;
-    private SQLiteDatabaseConnection transactionA = null;
-    private SQLiteDatabaseConnection transactionB = null;
-
     private static Map<String, SQLiteDatabaseConnection> transactions;
+    private SQLiteDatabaseConnection defaultConnection = null;
 
     public static synchronized SQLiteDatabaseHelper getInstance() {
         if (instance == null) {
@@ -50,6 +46,6 @@ public class SQLiteDatabaseHelper {
         if (transactions.containsKey(transactionName)) {
             return transactions.get(transactionName);
         }
-        throw new RuntimeException("Transaction Not Started");
+        return null;
     }
 }
