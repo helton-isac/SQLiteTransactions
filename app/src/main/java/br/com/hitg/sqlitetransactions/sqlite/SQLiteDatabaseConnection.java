@@ -18,7 +18,7 @@ public class SQLiteDatabaseConnection {
         initializeInstance(context);
         this.transactionName = transactionName;
         this.isInsideTransaction = true;
-        database.beginTransactionNonExclusive();
+        database.beginTransaction();
     }
 
     private void initializeInstance(Context context) {
