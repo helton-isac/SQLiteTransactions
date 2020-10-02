@@ -15,6 +15,14 @@ public class DAO {
 
     private static final String TRANSACTION_A = "TRANSACTION_A";
 
+    public static String getValueInConnection(SQLiteDatabaseConnection connection) {
+        String result = "";
+        result += getValueFromTable(connection, TABLE_DEFAULT) + "\n";
+        result += getValueFromTable(connection, TABLE_TRANSACTION_A) + "\n";
+        result += getValueFromTable(connection, TABLE_TRANSACTION_B) + "\n";
+        return result;
+    }
+
     private static String chooseTableByTransaction(SQLiteDatabaseConnection connection) {
         String table = TABLE_DEFAULT;
         if (connection.isInsideTransaction()) {
@@ -27,10 +35,7 @@ public class DAO {
         return table;
     }
 
-    public static String getValueInConnection(SQLiteDatabaseConnection connection) {
-
-        String table = chooseTableByTransaction(connection);
-
+    private static String getValueFromTable(SQLiteDatabaseConnection connection, String table) {
         String selectQuery =
                 "select " + COLUMN_VALUE +
                         " from " + table +
@@ -61,7 +66,7 @@ public class DAO {
     }
 
     private static String getTimeStamp() {
-        return DateFormat.getDateTimeInstance().format(new Date());
+        return DateFormat.getTimeInstance().format(new Date());
     }
 
     public static void resetTables() {

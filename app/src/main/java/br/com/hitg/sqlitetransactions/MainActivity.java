@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static String TRANSACTION_A = "TRANSACTION_A";
     private static String TRANSACTION_B = "TRANSACTION_B";
-    SQLiteDatabaseHelper helper;
+    private SQLiteDatabaseHelper helper;
     private TextView tvDefaultTransactionValue;
     private Button btDefaultTranUpdate;
     private Button btRefreshScreen;
