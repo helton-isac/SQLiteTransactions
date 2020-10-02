@@ -105,6 +105,39 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        btTranACommit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SQLiteDatabaseHelper.getInstance().commitTransaction(MainActivity.this, TRANSACTION_A);
+                refreshScreen();
+            }
+        });
+
+        btTranBCommit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SQLiteDatabaseHelper.getInstance().commitTransaction(MainActivity.this, TRANSACTION_B);
+                refreshScreen();
+            }
+        });
+
+        btTranARollback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SQLiteDatabaseHelper.getInstance().rollbackTransaction(MainActivity.this, TRANSACTION_A);
+                refreshScreen();
+            }
+        });
+
+        btTranBRollback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SQLiteDatabaseHelper.getInstance().rollbackTransaction(MainActivity.this, TRANSACTION_B);
+                refreshScreen();
+            }
+        });
+
+
     }
 
     private void startTransactionA() {

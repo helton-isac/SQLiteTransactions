@@ -2,10 +2,11 @@ package br.com.hitg.sqlitetransactions.sqlite;
 
 
 import android.content.Context;
-import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import br.com.hitg.sqlitetransactions.helper.Helper;
 
 public class SQLiteDatabaseHelper {
 
@@ -34,12 +35,18 @@ public class SQLiteDatabaseHelper {
             transactions.put(transactionName,
                     new SQLiteDatabaseConnection(context, transactionName));
         } else {
-            showToastMessage(context, "Transaction Already Started!");
+            Helper.showToastMessage(context, "Transaction Already Started!");
         }
     }
 
-    private void showToastMessage(Context context, String message) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    public void commitTransaction(Context context, String transactionName) {
+        if (transactions.containsKey(transactionName)) {
+            final SQLiteDatabaseConnection connection = transactions.get(transactionName);
+            connection.commitTransaction();
+            transactions.remove(transactionName);
+        } else {
+            Helper.showToastMessage(context, "Transaction Not Started!");
+        }
     }
 
     public SQLiteDatabaseConnection getConnectionByTransaction(String transactionName) {
@@ -47,5 +54,15 @@ public class SQLiteDatabaseHelper {
             return transactions.get(transactionName);
         }
         return null;
+    }
+
+    public void rollbackTransaction(Context context, String transactionName) {
+        if (transactions.containsKey(transactionName)) {
+            final SQLiteDatabaseConnection connection = transactions.get(transactionName);
+            connection.rollbackTransaction();
+            transactions.remove(transactionName);
+        } else {
+            Helper.showToastMessage(context, "Transaction Not Started!");
+        }
     }
 }

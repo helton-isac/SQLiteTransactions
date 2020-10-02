@@ -18,13 +18,13 @@ public class SQLiteDatabaseConnection {
         initializeInstance(context);
         this.transactionName = transactionName;
         this.isInsideTransaction = true;
-        database.beginTransaction();
     }
 
     private void initializeInstance(Context context) {
         this.sqlDB = SQLiteInstanceManager.getInstance(context);
         this.database = sqlDB.getWritableDatabase();
         this.database.enableWriteAheadLogging();
+        this.database.beginTransaction();
     }
 
     public boolean commitTransaction() {
