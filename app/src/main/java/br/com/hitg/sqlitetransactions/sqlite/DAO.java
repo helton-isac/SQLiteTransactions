@@ -2,6 +2,7 @@ package br.com.hitg.sqlitetransactions.sqlite;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -52,7 +53,7 @@ public class DAO {
     }
 
     public static void updateValueOnTransaction(SQLiteDatabaseConnection connection) {
-
+        final SQLiteDatabase database = connection.getDatabase();
         String table = chooseTableByTransaction(connection);
 
         String value = String.format("%s: %s", table, getTimeStamp());
@@ -61,9 +62,21 @@ public class DAO {
                         " SET " + COLUMN_VALUE + " = ? " +
                         " WHERE " + COLUMN_CODE + " = ?";
 
-        final SQLiteDatabase database = connection.getDatabase();
-        database.execSQL(updateValueStatement, new Object[]{value, table});
+        try {
+            database.beginTransactionNonExclusive();
+            database.execSQL(updateValueStatement, new Object[]{value, table});
+            database.setTransactionSuccessful();
+        } catch (Exception e) {
+            if (e != null) {
+                Log.d("TEST", e.getMessage());
+            }
+        } finally {
+            if (database != null && database.inTransaction()) {
+                database.endTransaction();
+            }
+        }
     }
+
 
     private static String getTimeStamp() {
         return DateFormat.getTimeInstance().format(new Date());
