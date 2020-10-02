@@ -17,18 +17,9 @@ public class SQLiteInstanceManager extends SQLiteOpenHelper {
     private static final String COLUMN_CODE = "code";
     private static final String COLUMN_VALUE = "value";
 
-    private static SQLiteInstanceManager instance;
-
     public SQLiteInstanceManager(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
-
-//    public static synchronized SQLiteInstanceManager getInstance(Context context) {
-//        if (instance == null) {
-//            instance = new SQLiteInstanceManager(context.getApplicationContext());
-//        }
-//        return instance;
-//    }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
