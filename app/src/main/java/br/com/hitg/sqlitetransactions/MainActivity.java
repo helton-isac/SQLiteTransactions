@@ -86,24 +86,26 @@ public class MainActivity extends AppCompatActivity {
         btDefaultTranUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateValueOnDefaultTransaction();
+                DAO.updateValueOnTransaction(helper.getDefaultConnection());
+                refreshScreen();
             }
         });
 
         btTranAStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startTransactionA();
+                helper.beginTransaction(MainActivity.this, TRANSACTION_A);
+                refreshScreen();
             }
         });
 
         btTranAUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateValueOnTransactionA();
+                DAO.updateValueOnTransaction(helper.getConnectionByTransaction(TRANSACTION_A));
+                refreshScreen();
             }
         });
-
 
         btTranACommit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,18 +115,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btTranBCommit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SQLiteDatabaseHelper.getInstance().commitTransaction(MainActivity.this, TRANSACTION_B);
-                refreshScreen();
-            }
-        });
-
         btTranARollback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SQLiteDatabaseHelper.getInstance().rollbackTransaction(MainActivity.this, TRANSACTION_A);
+                refreshScreen();
+            }
+        });
+
+        btTranBStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                helper.beginTransaction(MainActivity.this, TRANSACTION_B);
+                refreshScreen();
+            }
+        });
+
+        btTranBUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DAO.updateValueOnTransaction(helper.getConnectionByTransaction(TRANSACTION_B));
+                refreshScreen();
+            }
+        });
+
+        btTranBCommit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SQLiteDatabaseHelper.getInstance().commitTransaction(MainActivity.this, TRANSACTION_B);
                 refreshScreen();
             }
         });
@@ -140,20 +158,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void startTransactionA() {
-        helper.beginTransaction(this, TRANSACTION_A);
-        refreshScreen();
-    }
-
-    private void updateValueOnDefaultTransaction() {
-        DAO.updateValueOnTransaction(helper.getDefaultConnection());
-        refreshScreen();
-    }
-
-    private void updateValueOnTransactionA() {
-        DAO.updateValueOnTransaction(helper.getConnectionByTransaction(TRANSACTION_A));
-        refreshScreen();
-    }
 
     private void refreshScreen() {
         String result = DAO.getValueInConnection(helper.getDefaultConnection());
@@ -171,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
             btTranAUpdate.setEnabled(false);
             btTranACommit.setEnabled(false);
             btTranARollback.setEnabled(false);
+            tvTranAValue.setText("Transaction not started");
         } else {
             String tvTranAValueResult = DAO.getValueInConnection(transactionA);
             tvTranAValue.setText(tvTranAValueResult);
@@ -185,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
             btTranBUpdate.setEnabled(false);
             btTranBCommit.setEnabled(false);
             btTranBRollback.setEnabled(false);
+            tvTranBValue.setText("Transaction not started");
         } else {
             String tvTranBValueResult = DAO.getValueInConnection(transactionB);
             tvTranBValue.setText(tvTranBValueResult);
